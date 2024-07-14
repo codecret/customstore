@@ -1,3 +1,4 @@
+"use client";
 import { Icons } from "@/components/Icons";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { z } from "zod";
+import { z, ZodError } from "zod";
+import { trpc } from "@/trpc/client";
+import { Toaster, toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const AuthCredentialsValidator = z.object({
@@ -26,9 +30,29 @@ const Page = () => {
   } = useForm<TAuthCredentialsValidator>({
     resolver: zodResolver(AuthCredentialsValidator),
   });
+  const router = useRouter();
+  const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({
+    onError: (err) => {
+      if (err.data?.code === "CONFLICT") {
+        toast.error("This email is already in use. Signi in instead?");
+        return;
+      }
+
+      if (err instanceof ZodError) {
+        toast.error(err.message);
+        return;
+      }
+
+      toast.error("Something went wrong. Please try again");
+    },
+    onSuccess: ({ sentToEmail }) => {
+      toast.success(`Verification email sent to ${sentToEmail}`);
+      router.push("/verify-email?to=" + sentToEmail);
+    },
+  });
 
   const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
-    // mutate({ email, password });
+    mutate({ email, password });
   };
   return (
     <>
@@ -62,7 +86,7 @@ const Page = () => {
                     className={cn({
                       "focus-visible:ring-red-500": errors.email,
                     })}
-                    placeholder="you@example.com"
+                    placeholder="you@example.dev"
                   />
                   {errors?.email && (
                     <p className="text-sm text-red-500">
@@ -88,7 +112,7 @@ const Page = () => {
                   )}
                 </div>
 
-                <Button>Sign up</Button>
+                <Button disabled={isLoading}>Sign up</Button>
               </div>
             </form>
           </div>
