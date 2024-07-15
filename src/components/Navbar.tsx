@@ -6,9 +6,12 @@ import NavItems from "./NavItems";
 import { buttonVariants } from "./ui/button";
 import { Span } from "next/dist/trace";
 import Cart from "./Cart";
-
-const Navbar = () => {
-  const user = null;
+import { getServerSideUser } from "@/lib/payload-utils";
+import { cookies } from "next/headers";
+import UserAccountNav from "./UserAccountNav";
+const Navbar = async () => {
+  const nextCookies = cookies();
+  const { user } = await getServerSideUser(nextCookies);
 
   return (
     <div className="bg-white sticky z-50 top-0 inset-x-0 h-16">
@@ -45,7 +48,7 @@ const Navbar = () => {
                     <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                   )}
                   {user ? (
-                    <p></p>
+                    <UserAccountNav user={user} />
                   ) : (
                     <Link
                       href="/sign-up"
