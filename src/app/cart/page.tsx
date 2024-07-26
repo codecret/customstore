@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { PRODUCT_CATEGORIES } from "@/config";
 import { CartItem, useCart } from "@/hooks/use-cart";
@@ -8,7 +9,8 @@ import { Check, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const { items, removeItem } = useCart();
