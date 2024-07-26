@@ -1,4 +1,4 @@
-import { formatPrice } from "@/lib/utils";
+import { formatPrice } from "../../lib/utils";
 import { Product } from "@/payload-types";
 import {
   Body,
@@ -16,6 +16,7 @@ import {
   render,
 } from "@react-email/components";
 import { format } from "date-fns";
+import * as React from "react";
 
 interface ReceiptEmailProps {
   email: string;

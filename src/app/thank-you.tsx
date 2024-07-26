@@ -72,7 +72,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
                 to{" "}
                 {typeof order.user !== "string" ? (
                   <span className="font-medium text-gray-900">
-                    {(order.user as User).email}
+                    {order.user.email}
                   </span>
                 ) : null}
               </p>
@@ -154,7 +154,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
                 </div>
 
                 <PaymentStatus
-                  orderEmail={(order.user as User).email}
+                  orderEmail={(order.user as any).email}
                   isPaid={order._isPaid as boolean}
                   orderId={order.id as string}
                 />
