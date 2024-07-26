@@ -8,8 +8,6 @@ interface PageProps {
 const VerifyEmailPage = ({ searchParams }: PageProps) => {
   const token = searchParams.token;
   const toEmail = searchParams.to;
-  console.log(token);
-  console.log(toEmail);
 
   return (
     <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">
